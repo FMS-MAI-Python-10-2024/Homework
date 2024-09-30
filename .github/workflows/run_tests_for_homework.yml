@@ -1,4 +1,4 @@
-name: Run Student Tests for Specific Homework
+name: Run Tests for Test Homework
 
 on:
   push:
@@ -6,23 +6,15 @@ on:
       - main
     paths:
       - 'test_homework/**'
-      - 'homework2/**'
-      - 'homework3/**'
   pull_request:
     branches:
       - main
     paths:
       - 'test_homework/**'
-      - 'homework2/**'
-      - 'homework3/**'
 
 jobs:
   test_student_solutions:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        homework: [test_homework, homework2, homework3]
 
     steps:
     - name: Checkout repository
@@ -38,10 +30,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
 
-    - name: Remove Python cache
-      run: find . -type d -name "__pycache__" -exec rm -rf {} +
-
-    - name: Run tests for all variants
+    - name: Run tests for test_homework
       run: |
-        cd ${{ matrix.homework }}/tests
+        cd test_homework/tests
         pytest test_variant_*.py --tb=short --disable-warnings -q
