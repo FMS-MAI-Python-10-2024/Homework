@@ -1,6 +1,7 @@
 import os
 import unittest
 import importlib.util
+from unittest.mock import patch
 
 
 class TestVariant1(unittest.TestCase):
@@ -15,18 +16,26 @@ class TestVariant1(unittest.TestCase):
         student_solution_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(student_solution_module)
 
-        self.assertEqual(student_solution_module.student_solution([10, 0]), "Меня буллят...")
-        self.assertEqual(student_solution_module.student_solution([90, 1]), "Здоровья Вартумяну.")
-        self.assertEqual(student_solution_module.student_solution([1000, 0]), "Где роум?")
-        self.assertEqual(student_solution_module.student_solution([1000, 1]), "Хафизов нехороший человек.")
+        test_cases = [
+            (("10", "0"), "Меня буллят..."),
+            (("90", "1"), "Здоровья Вартумяну."),
+            (("1000", "0"), "Где роум?"),
+            (("1000", "1"), "Хафизов нехороший человек.")
+        ]
 
-    def test_all_students(self):
+        for input_data, expected_output in test_cases:
+            with patch('builtins.input', side_effect=input_data), patch('builtins.print') as mock_print:
+                student_solution_module.student_solution()
+                mock_print.assert_called_with(expected_output)
+
+    def test_student_solution(self, student_name):
         tasks_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../tasks'))
-        for file in os.listdir(tasks_folder):
-            if file.endswith(".py") and "_variant_1" in file:
-                student_name = file[:-3]
-                with self.subTest(student=student_name):
-                    self.run_tests_for_student(student_name)
+
+        student_file = f"{student_name}.py"
+        if student_file in os.listdir(tasks_folder):
+            self.run_tests_for_student(student_name)
+        else:
+            self.skipTest(f"Skipped tests for {student_name}: not this variant.")
 
 
 if __name__ == '__main__':

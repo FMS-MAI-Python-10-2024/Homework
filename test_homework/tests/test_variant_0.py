@@ -1,9 +1,10 @@
 import os
 import unittest
 import importlib.util
+from unittest.mock import patch
 
 
-class TestVariant(unittest.TestCase):
+class TestVariant0(unittest.TestCase):
     def run_tests_for_student(self, student_name):
         solution_file = os.path.abspath(
             os.path.join(os.path.dirname(__file__), f'../tasks/{student_name}.py'))
@@ -15,18 +16,26 @@ class TestVariant(unittest.TestCase):
         student_solution_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(student_solution_module)
 
-        self.assertEqual(student_solution_module.student_solution([1, 2]), "Пикай Хорька!")
-        self.assertEqual(student_solution_module.student_solution([1, 10]), "Каждый дуб когда был жёлудём...")
-        self.assertEqual(student_solution_module.student_solution([100, 1]), "One shot - one kill.")
-        self.assertEqual(student_solution_module.student_solution([999, 2]), "Хафизов нехороший человек.")
+        test_cases = [
+            (("1", "2"), "Пикай Хорька!"),
+            (("1", "10"), "Каждый дуб когда был жёлудём..."),
+            (("100", "1"), "One shot - one kill."),
+            (("999", "2"), "Хафизов нехороший человек.")
+        ]
 
-    def test_all_students(self):
+        for input_data, expected_output in test_cases:
+            with patch('builtins.input', side_effect=input_data), patch('builtins.print') as mock_print:
+                student_solution_module.student_solution()
+                mock_print.assert_called_with(expected_output)
+
+    def test_student_solution(self, student_name):
         tasks_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../tasks'))
-        for file in os.listdir(tasks_folder):
-            if file.endswith(".py") and "_variant_0" in file:
-                student_name = file[:-3]  # удаляем расширение .py
-                with self.subTest(student=student_name):
-                    self.run_tests_for_student(student_name)
+
+        student_file = f"{student_name}.py"
+        if student_file in os.listdir(tasks_folder):
+            self.run_tests_for_student(student_name)
+        else:
+            self.skipTest(f"Skipped tests for {student_name}: not this variant.")
 
 
 if __name__ == '__main__':
