@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - 'test_homework/**'
+      - 'test_homework/tasks/**'
   pull_request:
     branches:
       - main
     paths:
-      - 'test_homework/**'
+      - 'test_homework/tasks/**'
 
 jobs:
   test_student_solutions:
