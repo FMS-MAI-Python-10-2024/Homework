@@ -33,12 +33,12 @@ jobs:
     - name: Extract student file and variant
       id: extract_variant
       run: |
-        STUDENT_FILE=$(git diff --name-only | grep tasks | grep ".py")
+        STUDENT_FILE=$(git diff --name-only HEAD^ HEAD | grep tasks | grep ".py")
         if [ -z "$STUDENT_FILE" ]; then
           echo "No student file found."
           exit 1
         fi
-        
+        echo "Found student file: $STUDENT_FILE"
         VARIANT=$(echo $STUDENT_FILE | grep -oP '_variant_\K\d+')
         echo "STUDENT_FILE=$STUDENT_FILE" >> $GITHUB_ENV
         echo "VARIANT=$VARIANT" >> $GITHUB_ENV
