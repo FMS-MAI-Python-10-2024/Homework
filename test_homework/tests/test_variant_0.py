@@ -6,7 +6,8 @@ import importlib.util
 class TestVariant(unittest.TestCase):
     def run_tests_for_student(self, student_name):
         solution_file = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f'../test_homework/tasks/{student_name}.py'))
+            os.path.join(os.path.dirname(__file__), f'../tasks/{student_name}.py'))
+
         if not os.path.exists(solution_file):
             self.fail(f"Solution file not found: {solution_file}")
 
@@ -20,7 +21,7 @@ class TestVariant(unittest.TestCase):
         self.assertEqual(student_solution_module.student_solution([999, 2]), "Хафизов нехороший человек.")
 
     def test_all_students(self):
-        tasks_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../test_homework/tasks'))
+        tasks_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../tasks'))
         for file in os.listdir(tasks_folder):
             if file.endswith(".py") and "_variant_0" in file:
                 student_name = file[:-3]  # удаляем расширение .py
