@@ -6,7 +6,7 @@ import importlib.util
 class TestVariant(unittest.TestCase):
     def run_tests_for_student(self, student_name):
         solution_file = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f'../../test_homework/tasks/{student_name}.py'))
+            os.path.join(os.path.dirname(__file__), f'../test_homework/tasks/{student_name}.py'))
         if not os.path.exists(solution_file):
             self.fail(f"Solution file not found: {solution_file}")
 
