@@ -20,7 +20,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
-        fetch-depth: 2  # Это позволит Git получить два последних коммита для сравнения
+        fetch-depth: 2
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -51,4 +51,4 @@ jobs:
           echo "Variant not found in file name."
           exit 1
         fi
-        python3 -m unittest discover -s tests -p "test_variant_${VARIANT}.py"
+        python3 -m unittest discover -s test_homework/tests -p "test_variant_${VARIANT}.py"
