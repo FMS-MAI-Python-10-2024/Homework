@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - 'test_homework/tasks/**'
+      - 'test_homework/tasks/**.py'
   pull_request:
     branches:
       - main
     paths:
-      - 'test_homework/tasks/**'
+      - 'test_homework/tasks/**.py'
 
 jobs:
   test_student_solutions:
@@ -23,14 +23,30 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pytest
 
-    - name: Run tests for test_homework
+    - name: Extract student file and variant
+      id: extract_variant
       run: |
-        cd test_homework/tests
-        pytest test_variant_*.py -s --tb=short --disable-warnings -q
+        STUDENT_FILE=$(git diff --name-only | grep tasks | grep ".py")
+        if [ -z "$STUDENT_FILE" ]; then
+          echo "No student file found."
+          exit 1
+        fi
+        
+        VARIANT=$(echo $STUDENT_FILE | grep -oP '_variant_\K\d+')
+        echo "STUDENT_FILE=$STUDENT_FILE" >> $GITHUB_ENV
+        echo "VARIANT=$VARIANT" >> $GITHUB_ENV
+
+    - name: Run tests for the variant
+      run: |
+        if [ -z "$VARIANT" ]; then
+          echo "Variant not found in file name."
+          exit 1
+        fi
+        python3 -m unittest discover -s tests -p "test_variant_${VARIANT}.py"
