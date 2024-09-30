@@ -1,4 +1,4 @@
-name: Run Tests for Test Homework
+name: Run tests for test homework
 
 on:
   push:
@@ -33,4 +33,4 @@ jobs:
     - name: Run tests for test_homework
       run: |
         cd test_homework/tests
-        pytest test_variant_*.py --tb=short --disable-warnings -q
+        pytest test_variant_*.py -s --tb=short --disable-warnings -q
