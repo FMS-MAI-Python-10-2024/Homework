@@ -38,7 +38,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
 
-    - name: Run tests
+    - name: Remove Python cache
+      run: find . -type d -name "__pycache__" -exec rm -rf {} +
+
+    - name: Run tests for all variants
       run: |
         cd ${{ matrix.homework }}/tests
-        pytest --tb=short --disable-warnings -q
+        pytest test_variant_*.py --tb=short --disable-warnings -q
