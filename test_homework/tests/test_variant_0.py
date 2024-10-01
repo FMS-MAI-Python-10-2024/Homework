@@ -19,10 +19,10 @@ class TestVariant0(unittest.TestCase):
         spec.loader.exec_module(student_solution_module)
 
         test_cases = [
-            (("1", "2"), "Пикай Хорька!"),
-            (("1", "10"), "Каждый дуб когда был жёлудём..."),
-            (("100", "1"), "One shot - one kill."),
-            (("999", "2"), "Хафизов нехороший человек.")
+            ("1 2", "Пикай Хорька!"),
+            ("1 10", "Каждый дуб когда был жёлудём..."),
+            ("100 1", "One shot - one kill."),
+            ("999 2", "Хафизов нехороший человек.")
         ]
 
         success_count = 0
