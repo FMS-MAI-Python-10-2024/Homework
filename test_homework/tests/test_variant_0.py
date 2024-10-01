@@ -35,11 +35,15 @@ class TestVariant0(unittest.TestCase):
             with patch('builtins.input', side_effect=[input_data]), patch('builtins.print') as mock_print:
                 try:
                     student_solution_module.student_solution()
-                    mock_print.assert_called_with(expected_output)
+                    printed_output = mock_print.call_args[0][0] if mock_print.call_args else None
+
+                    if printed_output != expected_output:
+                        self.fail(
+                            f"Test {success_count+1} failed for input: {input_data}. Expected: {expected_output}, but got: {printed_output}")
+
                     success_count += 1
-                except AssertionError:
-                    print(
-                        f"Test {success_count + 1}/{total_tests} failed for input: {input_data}. Expected: {expected_output}. Got: {mock_print.call_args[0][0]}")
+                except Exception as e:
+                    self.fail(f"Test {success_count+1} encountered an error: {e}")
 
         print(f"Results: {success_count}/{total_tests} tests passed.")
 
@@ -60,27 +64,3 @@ class TestVariant0(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-# a, b = map(int, input().split())
-# summ = a + b
-#
-# if summ <= 10:
-#     print("Пикай Хорька!")
-# elif 10 < summ <= 100:
-#     print("Каждый дуб когда был жёлудём...")
-# elif 100 < summ <= 1000:
-#     print("One shot - one kill.")
-# else:
-#     print("Хафизов нехороший человек.")
-
-# a, b = map(int, input().split())
-# summ = a + b
-#
-# if summ <= 10:
-#     print("Пdghfdgfикай Хорька!")
-# elif 10 < summ <= 100:
-#     print("Кажdgfdjgfjдый дуб когда был жёлудём...")
-# elif 100 < summ <= 1000:
-#     print("Ondgfdjgfe shot - one kill.")
-# else:
-#     print("Хафизовdjfdjh нехороший человек.")
