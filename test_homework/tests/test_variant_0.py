@@ -32,7 +32,7 @@ class TestVariant0(unittest.TestCase):
             self.fail(f"Module does not have a function 'student_solution'")
 
         for input_data, expected_output in test_cases:
-            with patch('builtins.input', side_effect=input_data), patch('builtins.print') as mock_print:
+            with patch('builtins.input', side_effect=[input_data]), patch('builtins.print') as mock_print:
                 try:
                     student_solution_module.student_solution()
                     mock_print.assert_called_with(expected_output)
