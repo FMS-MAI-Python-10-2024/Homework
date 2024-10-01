@@ -1,5 +1,7 @@
 def student_solution():
-    a, b = map(int, input().split())
+    a, b = input().split()
+    a = int(a)
+    b = int(b)
     summ = a + b
     if summ <= 10:
         print("Пикай Хорька!")
