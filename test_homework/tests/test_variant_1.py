@@ -29,7 +29,7 @@ class TestVariant1(unittest.TestCase):
         for input_data, expected_output in test_cases:
             with patch('builtins.input', side_effect=input_data), patch('builtins.print') as mock_print:
                 try:
-                    student_solution_module.student_solution()
+                    exec(open(solution_file).read())
                     mock_print.assert_called_with(expected_output)
                     success_count += 1
                 except AssertionError:
@@ -43,7 +43,7 @@ class TestVariant1(unittest.TestCase):
         if not student_file:
             self.skipTest("No student file specified")
 
-        student_name = student_file.replace(".py", "")
+        student_name = os.path.basename(student_file).replace(".py", "")
 
         tasks_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../tasks'))
 
