@@ -4,13 +4,15 @@ import importlib.util
 from unittest.mock import patch
 
 
-class TestVariant1(unittest.TestCase):
+class TestVariant0(unittest.TestCase):
     def run_tests_for_student(self, student_name):
         solution_file = os.path.abspath(
             os.path.join(os.path.dirname(__file__), f'../tasks/{student_name}.py'))
 
         if not os.path.exists(solution_file):
             self.fail(f"Solution file not found: {solution_file}")
+
+        print(f"Solution file found: {solution_file}, running tests...")
 
         spec = importlib.util.spec_from_file_location(student_name, solution_file)
         student_solution_module = importlib.util.module_from_spec(spec)
@@ -26,10 +28,13 @@ class TestVariant1(unittest.TestCase):
         success_count = 0
         total_tests = len(test_cases)
 
+        if not hasattr(student_solution_module, 'student_solution'):
+            self.fail(f"Module does not have a function 'student_solution'")
+
         for input_data, expected_output in test_cases:
             with patch('builtins.input', side_effect=input_data), patch('builtins.print') as mock_print:
                 try:
-                    exec(open(solution_file).read())
+                    student_solution_module.student_solution()
                     mock_print.assert_called_with(expected_output)
                     success_count += 1
                 except AssertionError:

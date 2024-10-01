@@ -28,13 +28,13 @@ class TestVariant0(unittest.TestCase):
         success_count = 0
         total_tests = len(test_cases)
 
+        if not hasattr(student_solution_module, 'student_solution'):
+            self.fail(f"Module does not have a function 'student_solution'")
+
         for input_data, expected_output in test_cases:
             with patch('builtins.input', side_effect=input_data), patch('builtins.print') as mock_print:
                 try:
-                    if hasattr(student_solution_module, 'student_solution'):
-                        student_solution_module.student_solution()
-                    else:
-                        exec(open(solution_file).read())
+                    student_solution_module.student_solution()
                     mock_print.assert_called_with(expected_output)
                     success_count += 1
                 except AssertionError:
@@ -60,7 +60,6 @@ class TestVariant0(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
 
 # a, b = map(int, input().split())
 # summ = a + b
