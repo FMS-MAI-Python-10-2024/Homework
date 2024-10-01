@@ -45,12 +45,12 @@ class TestVariant1(unittest.TestCase):
 
         student_name = os.path.basename(student_file).replace(".py", "")
 
-        tasks_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../tasks'))
+        solution_file = os.path.abspath(student_file)
 
-        if student_file in os.listdir(tasks_folder):
+        if os.path.exists(solution_file):
             self.run_tests_for_student(student_name)
         else:
-            self.skipTest(f"Skipped tests for {student_name}: not this variant.")
+            self.fail(f"Test skipped: no file {solution_file} found.")
 
 
 if __name__ == '__main__':
