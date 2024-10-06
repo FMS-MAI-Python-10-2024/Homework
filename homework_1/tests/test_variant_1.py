@@ -5,6 +5,7 @@ import unittest
 import importlib.util
 from pathlib import Path
 from unittest.mock import patch
+import subprocess
 
 
 class TestVariant1(unittest.TestCase):
@@ -22,6 +23,17 @@ class TestVariant1(unittest.TestCase):
         first_line = ' '.join(str(random.randint(0, 10 ** 5)) for _ in range(num_count))
         second_line = str(random.randint(1, num_count))
         return f"{first_line}\n{second_line}"
+
+    def add_and_commit_test_params(self, test_params_file, variant_number):
+        # Добавляем файл в Git
+        subprocess.run(["git", "add", test_params_file], check=True)
+
+        # Коммитим изменения с сообщением
+        commit_message = f"Add generated test cases for variant {variant_number}"
+        subprocess.run(["git", "commit", "-m", commit_message], check=True)
+
+        # Пушим изменения на удалённый репозиторий
+        subprocess.run(["git", "push"], check=True)
 
     def run_tests_for_student(self, student_name, variant_number):
         student_solution_file = os.path.abspath(
@@ -61,9 +73,12 @@ class TestVariant1(unittest.TestCase):
             test_cases = self.generate_test_cases(solve_func, num_tests=40, input_range=(1, 1000))
 
             # Сохраняем сгенерированные тесты в JSON
+
             with open(test_params_file, 'w') as f:
                 json.dump(test_cases, f)
             print(f"Test cases saved to {test_params_file}.")
+            # Добавляем и пушим файл в репозиторий
+            self.add_and_commit_test_params(test_params_file, variant_number)
         else:
             print(f"Loading test cases from {test_params_file}.")
             with open(test_params_file, 'r') as f:

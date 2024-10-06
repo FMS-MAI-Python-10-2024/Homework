@@ -5,4 +5,5 @@ def solve():
     ans = 1e10
     for i in range(len(nums) - k + 1):
         ans = min(ans, nums[i + k - 1] - nums[i])
-    print(ans)
+
+    return ans
