@@ -4,7 +4,7 @@ import importlib.util
 from unittest.mock import patch
 
 
-class TestVariant0(unittest.TestCase):
+class TestVariant1(unittest.TestCase):
     def run_tests_for_student(self, student_name):
         solution_file = os.path.abspath(
             os.path.join(os.path.dirname(__file__), f'../tasks/{student_name}.py'))
