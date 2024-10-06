@@ -1,4 +1,4 @@
-name: Add Test Params
+name: Add and Commit Test Params
 
 on:
   pull_request:
@@ -6,46 +6,29 @@ on:
       - testing
 
 jobs:
-  add-tests:
+  add_test_params:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
 
-      - name: Run tests and generate test cases if missing
-        env:
-          STUDENT_FILE: ${{ github.event.pull_request.head.ref }}  # передаём файл студента в качестве переменной окружения
-        run: |
-          python -m unittest discover -s tests
+    - name: Run test generation and commit
+      run: |
+        python generate_and_commit_tests.py
 
-      - name: Check if test_params were generated
-        run: |
-          if [[ $(git status --porcelain) ]]; then
-            echo "Test params generated, preparing to add them to repository"
-          else
-            echo "No test params generated, skipping commit"
-            exit 0
-
-      - name: Commit and push test_params
-        if: success()
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .  # добавляем все изменения, включая файлы test_params
-          git commit -m "Add generated test_params for ${STUDENT_FILE}"
-          git push origin testing
-        env:
-          TEST_ADD_TOKEN: ${{ secrets.TEST_ADD_TOKEN }}
-        with:
-          token: ${{ secrets.TEST_ADD_TOKEN }}
+    - name: Push changes
+      env:
+        TEST_ADD_TOKEN: ${{ secrets.TEST_ADD_TOKEN }}
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        python -c "from generate_and_commit_tests import add_and_commit_test_params; add_and_commit_test_params()"

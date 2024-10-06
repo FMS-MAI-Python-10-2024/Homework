@@ -32,8 +32,14 @@ class TestVariant1(unittest.TestCase):
         commit_message = f"Add generated test cases for variant {variant_number}"
         subprocess.run(["git", "commit", "-m", commit_message], check=True)
 
+        # Настраиваем URL репозитория с токеном для аутентификации
+        repo_url = f"https://{os.getenv('TEST_ADD_TOKEN')}@github.com/your-org-name/FMS-MAI-Python-10-2024.git"
+
+        # Устанавливаем удалённый URL с токеном
+        subprocess.run(["git", "remote", "set-url", "origin", repo_url], check=True)
+
         # Пушим изменения на удалённый репозиторий
-        subprocess.run(["git", "push"], check=True)
+        subprocess.run(["git", "push", "origin", "testing"], check=True)
 
     def run_tests_for_student(self, student_name, variant_number):
         student_solution_file = os.path.abspath(
