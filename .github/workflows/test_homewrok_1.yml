@@ -1,4 +1,4 @@
-name: Run tests for test homework
+name: Run tests for homework 1
 
 on:
   push:
